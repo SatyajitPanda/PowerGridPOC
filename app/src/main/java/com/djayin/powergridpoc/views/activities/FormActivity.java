@@ -55,7 +55,8 @@ public class FormActivity extends AppCompatActivity {
         obj.setAddress2(binding.editAddress2.getText().toString());
         obj.setAddress3(binding.editAddress3.getText().toString());
 
-        AppUtils.lstFormData.add(obj);
+        //AppUtils.lstFormData.add(obj);
+        AppUtils.formData = obj;
 
         Toast toast = Toast.makeText(this, "Data Submitted Successfully", Toast.LENGTH_SHORT);
         toast.show();

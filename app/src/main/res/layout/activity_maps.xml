@@ -105,7 +105,7 @@
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:src="@drawable/ic_edit"/>
+                        android:src="@drawable/ic_person"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="50dp"
@@ -113,7 +113,8 @@
                     android:background="@drawable/floating_button"
                     android:gravity="center"
                     android:layout_marginVertical="@dimen/dim5"
-                    android:layout_marginHorizontal="7dp">
+                    android:layout_marginHorizontal="7dp"
+                    android:visibility="gone">
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"

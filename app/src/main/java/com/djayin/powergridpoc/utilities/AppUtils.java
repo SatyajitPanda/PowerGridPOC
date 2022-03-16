@@ -14,6 +14,7 @@ import java.util.List;
 
 public class AppUtils {
     public static List<FormData> lstFormData = new ArrayList<>();
+    public static FormData formData = new FormData();
     public static LatLng geoLatLon;
 
     public class LocationConstants {

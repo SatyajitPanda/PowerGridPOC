@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,10 +42,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.libraries.places.compat.Place;
 import com.google.android.libraries.places.compat.ui.PlaceAutocomplete;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -172,7 +176,7 @@ public class Custommap extends AppCompatActivity implements OnMapReadyCallback, 
                 //i.putExtra("lat",20.462521);
                 i.putExtra("lat",mCenterLatLong.latitude);
                 //i.putExtra("lon",85.882988);
-                i.putExtra("lon",mCenterLatLong.latitude);
+                i.putExtra("lon",mCenterLatLong.longitude);
                 startActivity(i);
                // finish();
                // bottomSheetForm.show(getActivity().getSupportFragmentManager(), bottomSheetForm.getTag());
@@ -195,6 +199,7 @@ public class Custommap extends AppCompatActivity implements OnMapReadyCallback, 
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "OnMapReady");
         mMap = googleMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         loadGeoJson();
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
@@ -237,6 +242,8 @@ public class Custommap extends AppCompatActivity implements OnMapReadyCallback, 
 //        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         //addMarker();
+
+
     }
 
     private void loadGeoJson(){
@@ -261,6 +268,29 @@ public class Custommap extends AppCompatActivity implements OnMapReadyCallback, 
         }
         mCenterLatLong = AppUtils.geoLatLon;
         changeMap();
+        drawLine();
+    }
+
+    private void drawLine(){
+        if(mMap != null) {
+            locationMarker.setVisibility(View.GONE);
+            if(AppUtils.formData != null && AppUtils.formData.getLat() != 0) {
+                Polyline polyline = mMap.addPolyline(new PolylineOptions()
+                        .add(
+                                new LatLng(AppUtils.formData.getLat(), AppUtils.formData.getLon()),
+                                new LatLng(20.31630670447039, 85.82937955856323))
+                .width(5f)
+                .color(Color.parseColor("#66a3ff")));
+
+                mMap.addMarker(new MarkerOptions().position(new LatLng(AppUtils.formData.getLat(),
+                        AppUtils.formData.getLon()))
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.user_icon_resized))
+                        .title(AppUtils.formData.getConsumerName()));
+
+                AppUtils.formData = null;
+            }
+        }
+
     }
 
     private void addMarker(){
@@ -366,7 +396,7 @@ public class Custommap extends AppCompatActivity implements OnMapReadyCallback, 
                 //changeMap(location);
             LocationServices.FusedLocationApi.removeLocationUpdates(
                     mGoogleApiClient, this);
-
+            drawLine();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -462,7 +492,7 @@ public class Custommap extends AppCompatActivity implements OnMapReadyCallback, 
             latLong = new LatLng(mCenterLatLong.latitude, mCenterLatLong.longitude);
 
             CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(latLong).zoom(19f).tilt(70).build();
+                    .target(latLong).zoom(19f).build();
 
             mMap.setMyLocationEnabled(true);
 
